@@ -1,0 +1,24 @@
+# Model weights
+*.pt
+
+# Data files
+stokes_npy/
+_archive/
+
+# Generated outputs
+figures/
+data/demo/pred.npy
+*.png
+*.xlsx
+*.docx
+*.pptx
+*.zip
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE
+.idea/
+.vscode/
