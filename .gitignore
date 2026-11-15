@@ -1,24 +1,27 @@
-# Model weights
-*.pt
-
-# Data files
-stokes_npy/
-_archive/
-
-# Generated outputs
-figures/
-data/demo/pred.npy
-*.png
-*.xlsx
-*.docx
-*.pptx
-*.zip
-
-# Python
+# Python and local environments
 __pycache__/
-*.pyc
-*.pyo
-
-# IDE
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.DS_Store
 .idea/
 .vscode/
+.env
+.env.*
+# Local experimental inputs and outputs
+/data/raw/
+/data/private/
+/stokes_raw/
+/stokes_npy/
+/models/*
+!/models/README.md
+/results/*
+!/results/README.md
+/runs/
+/figures/
+*.pt
+*.keras
+*.h5
+*.pptx
+*.zip

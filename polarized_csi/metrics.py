@@ -1,53 +1,31 @@
-"""PSNR / SSIM（物理尺度 Stokes，各通道 data_range 取自真值）。"""
-
-from __future__ import annotations
-
+"""Legacy metric API with explicit range and per-image batch SSIM."""
 import numpy as np
-from skimage.metrics import structural_similarity as ssim_fn
+from skimage.metrics import structural_similarity
 
 
-def channel_data_range(gt_channel: np.ndarray) -> float:
-    """真值通道的动态范围 max - min；近乎常数时回退为 1.0。"""
-    dr = float(np.max(gt_channel) - np.min(gt_channel))
-    return dr if dr > 1e-10 else 1.0
-
-
-def psnr_channels(pred: np.ndarray, gt: np.ndarray) -> np.ndarray:
-    """
-    pred, gt: (N, H, W, 4) 或 (H, W, 4)，物理尺度 Stokes。
-    各通道 PSNR 的 data_range 取该通道真值的 max - min。
-    返回长度为 4 的各通道 PSNR (dB)。
-    """
-    if pred.shape != gt.shape:
-        raise ValueError(f"shape mismatch {pred.shape} vs {gt.shape}")
+def _arrays(pred, gt, data_range):
+    pred, gt = np.asarray(pred, dtype=np.float64), np.asarray(gt, dtype=np.float64)
+    if pred.shape != gt.shape or pred.ndim not in (3, 4) or pred.shape[-1] != 4:
+        raise ValueError('Expected matching (H,W,4) or (N,H,W,4) arrays')
+    if not pred.size or not np.isfinite(pred).all() or not np.isfinite(gt).all():
+        raise ValueError('Expected non-empty finite arrays')
+    if not np.isfinite(data_range) or data_range <= 0:
+        raise ValueError('data_range must be positive and finite')
     if pred.ndim == 3:
-        pred = pred[np.newaxis, ...]
-        gt = gt[np.newaxis, ...]
-    out = []
-    for c in range(4):
-        gtc = gt[..., c]
-        dr = channel_data_range(gtc)
-        mse = np.mean((pred[..., c] - gtc) ** 2)
-        if mse < 1e-12:
-            out.append(99.0)
-        else:
-            out.append(10.0 * np.log10((dr**2) / mse))
-    return np.array(out, dtype=np.float64)
+        pred, gt = pred[None], gt[None]
+    return pred, gt
 
 
-def mean_ssim(pred: np.ndarray, gt: np.ndarray) -> float:
-    """对四通道取平均 SSIM；各通道 data_range 取自真值。"""
-    if pred.shape != gt.shape:
-        raise ValueError(f"shape mismatch {pred.shape} vs {gt.shape}")
-    vals = []
-    for c in range(4):
-        gtc = gt[..., c]
-        dr = channel_data_range(gtc)
-        vals.append(
-            ssim_fn(
-                gtc,
-                pred[..., c],
-                data_range=dr,
-            )
-        )
-    return float(np.mean(vals))
+def psnr_channels(pred, gt, data_range=1.0):
+    """Four channel PSNR from pooled MSE; 99 marks near-zero MSE."""
+    pred, gt = _arrays(pred, gt, data_range)
+    mse = np.mean((pred - gt) ** 2, axis=(0, 1, 2))
+    return np.array([99.0 if v < 1e-12 else 10 * np.log10(data_range**2 / v) for v in mse])
+
+
+def mean_ssim(pred, gt, data_range=1.0):
+    pred, gt = _arrays(pred, gt, data_range)
+    if min(pred.shape[1:3]) < 7:
+        raise ValueError('SSIM requires height and width >= 7')
+    return float(np.mean([structural_similarity(g[..., c], p[..., c], data_range=data_range)
+                          for p, g in zip(pred, gt) for c in range(4)]))

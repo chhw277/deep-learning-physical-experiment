@@ -1,0 +1,33 @@
+name: Tests
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  pytorch:
+    runs-on: ubuntu-latest
+    env:
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: python -m pip install -r requirements-dev.txt --extra-index-url https://download.pytorch.org/whl/cpu
+      - run: python -m pytest -q tests/test_core.py tests/test_pytorch.py
+      - run: python scripts/smoke_test.py --out-dir runs/ci-smoke
+  tensorflow:
+    runs-on: ubuntu-latest
+    env:
+      TF_NUM_INTEROP_THREADS: '1'
+      TF_NUM_INTRAOP_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: python -m pip install -r requirements-tf.txt 'pytest>=8,<10'
+      - run: python -m pytest -q tests/test_core.py tests/test_tensorflow.py

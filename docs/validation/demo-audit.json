@@ -1,0 +1,121 @@
+{
+  "sample_count": 8,
+  "pixels": 10240,
+  "invalid_pixels": 8929,
+  "invalid_fraction": 0.87197265625,
+  "samples": [
+    {
+      "name": "sample00",
+      "shape": [
+        32,
+        40,
+        4
+      ],
+      "physics": {
+        "pixels": 1280,
+        "invalid_pixels": 1110,
+        "invalid_fraction": 0.8671875,
+        "tolerance": 1e-05
+      }
+    },
+    {
+      "name": "sample01",
+      "shape": [
+        32,
+        40,
+        4
+      ],
+      "physics": {
+        "pixels": 1280,
+        "invalid_pixels": 1121,
+        "invalid_fraction": 0.87578125,
+        "tolerance": 1e-05
+      }
+    },
+    {
+      "name": "sample02",
+      "shape": [
+        32,
+        40,
+        4
+      ],
+      "physics": {
+        "pixels": 1280,
+        "invalid_pixels": 1107,
+        "invalid_fraction": 0.86484375,
+        "tolerance": 1e-05
+      }
+    },
+    {
+      "name": "sample03",
+      "shape": [
+        32,
+        40,
+        4
+      ],
+      "physics": {
+        "pixels": 1280,
+        "invalid_pixels": 1132,
+        "invalid_fraction": 0.884375,
+        "tolerance": 1e-05
+      }
+    },
+    {
+      "name": "sample04",
+      "shape": [
+        32,
+        40,
+        4
+      ],
+      "physics": {
+        "pixels": 1280,
+        "invalid_pixels": 1109,
+        "invalid_fraction": 0.86640625,
+        "tolerance": 1e-05
+      }
+    },
+    {
+      "name": "sample05",
+      "shape": [
+        32,
+        40,
+        4
+      ],
+      "physics": {
+        "pixels": 1280,
+        "invalid_pixels": 1136,
+        "invalid_fraction": 0.8875,
+        "tolerance": 1e-05
+      }
+    },
+    {
+      "name": "sample06",
+      "shape": [
+        32,
+        40,
+        4
+      ],
+      "physics": {
+        "pixels": 1280,
+        "invalid_pixels": 1106,
+        "invalid_fraction": 0.8640625,
+        "tolerance": 1e-05
+      }
+    },
+    {
+      "name": "sample07",
+      "shape": [
+        32,
+        40,
+        4
+      ],
+      "physics": {
+        "pixels": 1280,
+        "invalid_pixels": 1108,
+        "invalid_fraction": 0.865625,
+        "tolerance": 1e-05
+      }
+    }
+  ],
+  "interpretation": "Only valid for raw Stokes channels with one common intensity scale; not proof of acquisition provenance."
+}
